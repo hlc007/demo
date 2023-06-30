@@ -25,10 +25,25 @@
         ]).
 
 start(_StartType, _StartArgs) ->
+
+    %% manually pre-set the envs to avoid the eredis_pool crashes
+    PoolOpts = [{size, 10}, {max_overflow, 20}],
+    RedisOpts = [{host, "127.0.0.1"},
+                 {port, 6379},
+                 {database, 0},
+                 %{password, "abc"},
+                 {reconnect_sleep, 100}
+                ],
+    application:set_env(eredis_pool, pools, [{default, PoolOpts, RedisOpts}]),
+    application:set_env(eredis_pool, global_or_local, local),
+    application:ensure_all_started(eredis_pool),
+
     {ok, Sup} = emqx_plugin_template_sup:start_link(),
     emqx_plugin_template:load(application:get_all_env()),
     {ok, Sup}.
 
 stop(_State) ->
+    %application:unset_env(eredis_pool, pools),
+    %application:unset_env(eredis_pool, global_or_local),
+    %application:stop(eredis_pool),
     emqx_plugin_template:unload().
-

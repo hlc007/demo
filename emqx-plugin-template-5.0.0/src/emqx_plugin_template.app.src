@@ -3,7 +3,7 @@
   {vsn, "5.0.0"},
   {modules, []},
   {registered, [emqx_plugin_template_sup]},
-  {applications, [kernel,stdlib,map_sets,eredis_pool]},
+  {applications, [kernel,stdlib,map_sets]},
   {mod, {emqx_plugin_template_app,[]}},
   {env, []},
   {licenses, ["Apache-2.0"]},
